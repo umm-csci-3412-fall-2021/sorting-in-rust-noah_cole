@@ -6,7 +6,7 @@ fn main() {
     // between the different algorithms. Since insertion sort is O(N^2)
     // and the other two are O(N log N), you should definitely be able
     // to see a difference between it and the two faster algorithms.
-    let size = 1000; // 100000;
+    let size = 100000; // 100000;
     let v = generate_random_array(size, 0, size);
 
     let mut u = v.clone();
@@ -105,10 +105,19 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     }
 
     // Now choose a pivot and do the organizing.
-    
-    // ...
+    let mut left_index = 0;
+    let right_index = length - 1;
 
-    let smaller = 0; // Totally wrong – you should fix this.
+    for i in 0..right_index{
+        if v[i] < v[right_index] {
+            v.swap(i, left_index);
+            left_index += 1;
+        }
+    }
+
+    let smaller = left_index;
+
+    v.swap(smaller, right_index);
 
     // Sort all the items < pivot
     quicksort(&mut v[0..smaller]);
@@ -117,6 +126,8 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     // here you can end up in infinite recursions.
     quicksort(&mut v[smaller+1..length]);
 }
+
+// Function to partition the quicksort array
 
 // Merge sort can't be done "in place", so it needs to return a _new_
 // Vec<T> of the sorted elements. The array elements need to have
@@ -164,10 +175,6 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
     merge(left, right)
 }
 
-// "Out of the box" there's a warning here about `ys` being
-// unused. Presumably you'll actually use `ys` in your solution,
-// so that warning should go away. You can remove this comment
-// if you wish since it won't be relevant any longer.
 fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Vec<T>) -> Vec<T> {
     // This takes two sorted vectors, like:
     //    <5, 8, 9> and
@@ -182,9 +189,28 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
     // vector, and then push all the remaining elements from the
     // other vector onto the result.
 
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
-    xs
+    // Something useful (:
+    let mut result = Vec::<T>::new();
+    let mut i = 0;
+    let mut j = 0;
+    while i < xs.len() && j < ys.len() {
+        if xs[i] < ys[j] {
+            result.push(xs[i]);
+            i += 1;
+        } else {
+            result.push(ys[j]);
+            j += 1;
+        }
+    }
+    while i < xs.len() {
+        result.push(xs[i]);
+        i += 1;
+    }
+    while j < ys.len() {
+        result.push(ys[j]);
+        j += 1;
+    }
+    result
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
